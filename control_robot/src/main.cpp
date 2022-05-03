@@ -180,6 +180,9 @@ void turnWheelR (float setpoint , long inTick){
     digitalWrite(R_motor_DIR2 , 0) ;
     r_pwm = 0 ; 
   }
+  if (r_pwm < 0 ){
+    r_pwm = 0 ; 
+  }
   analogWrite(R_motor_PWM , r_pwm) ; 
 }
 
@@ -202,7 +205,6 @@ void debug_encoder () {
 }
 
 void setup() {
-  Serial.begin(9600) ; 
   /* Set pin Motor  */
   pinMode(L_motor_PWM  , OUTPUT) ; 
   pinMode(R_motor_PWM  , OUTPUT) ; 
