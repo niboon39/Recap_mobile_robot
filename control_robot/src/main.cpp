@@ -148,7 +148,7 @@ void turnWheelR (float setpoint , long inTick){
   diffTickR = curTickR - prevTickR ; 
   diffTimeR = curTimeR - prevTimeR ; 
 
-  measuredRPMR = ( (diffTickR / PPR) / (diffTimeR / 0.001) ) * 60 ; 
+  measuredRPMR = ( (diffTickR / PPR) / (diffTimeR * 0.001) ) * 60 ; 
 
   rpm_right_msg.data = measuredRPMR ; 
 
