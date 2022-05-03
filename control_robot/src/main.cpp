@@ -46,10 +46,13 @@ void Count_r (){
   }
 }
 
-void stop(){
+void Init_pin_var(){
   digitalWrite(L_motor_DIR1 , 0);digitalWrite(L_motor_DIR2 , 0) ;
   digitalWrite(R_motor_DIR1 , 0);digitalWrite(R_motor_DIR2 , 0) ;
   analogWrite(L_motor_PWM , 0 ) ; analogWrite(R_motor_PWM , 0 ) ; 
+  pulse_r = 0 ; 
+  pulse_l = 0 ;
+  time_old = 0 ; 
 }
 
 
@@ -164,11 +167,11 @@ void turnWheelR (float setpoint , long inTick){
   prevTickR = curTickR ; 
   prevTimeR = curTimeR ; 
 
-  if ( setRPMR > 0  ){
+  if ( setRPMR > 0  ){ // forward 
     digitalWrite(R_motor_DIR1 , 0) ; 
     digitalWrite(R_motor_DIR2 , 1) ;
     r_pwm = controlR_outR ;  
-  }else if (setRPMR < 0 ){
+  }else if (setRPMR < 0 ){ // backward 
     digitalWrite(R_motor_DIR1 , 1) ;
     digitalWrite(R_motor_DIR2 , 0) ;
     r_pwm = controlR_outR ; 
@@ -208,8 +211,8 @@ void setup() {
   pinMode(R_motor_DIR1 , OUTPUT) ;
   pinMode(R_motor_DIR2 , OUTPUT) ;  
 
-  /* Stop motor */
-  stop() ; 
+  /* Init Pin & Var */
+  Init_pin_var() ; 
 
   /* Set pin Encoder */
   pinMode(ENr_A , INPUT); pinMode(ENr_B , INPUT) ; 
@@ -220,13 +223,14 @@ void setup() {
 
   /* ROS setup */
   nh.initNode();
+  Serial.begin(57600);
   nh.subscribe(sub_right) ; 
   nh.subscribe(sub_left) ; 
   nh.advertise(rpm_left_pub) ; 
   nh.advertise(rpm_right_pub) ; 
   nh.advertise(rticks_pub) ; 
   nh.advertise(lticks_pub) ; 
-  delay(50) ; 
+  delay(20) ; 
 
 }
 
@@ -249,5 +253,6 @@ void loop() {
   }
 
   nh.spinOnce() ; 
+
 
 }
